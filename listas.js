@@ -1,3 +1,8 @@
+const initial_option = [
+  {name: 'Fazer uma doação', url: 'https://t.me/+JK7wnzLtPA1jZTVh'},
+  {name: 'Continuar', url: 'continuar'}
+]
+
 const categorias = [
   'Data science & afins',
   'Desenvolvimento Web',
@@ -9,7 +14,8 @@ const categorias = [
 
 const web = [
   {name: 'Front End', url: 'Front'},
-  {name: 'Back End', url: 'Back'}
+  {name: 'Back End', url: 'Back'},
+  {name: 'FullStack', url: 'FullStack'}
 ]
 
 const front = [
@@ -19,6 +25,20 @@ const front = [
   {name: 'FrontPush - Nasser Yousef Ali', url: 'https://t.me/+ACQWzfpgz5RiYzBh'}
 ]
 
+const back = [
+  {name: 'PHP MySQL Estudonauta 2019', url: 'https://t.me/+ACVyCTN7NdxlMWNh'},
+  {name: 'PHP para Iniciantes - Gustavo Guanabara (Estudonauta) 2018', url: 'https://t.me/+TSC2xPZoe9BhZTJh'},
+  {name: 'Laravel Developer - UpInside', url: 'https://t.me/+_iQpaGXGwJU1YTIx'},
+  {name: 'Rocketseat - Ignite - Trilha NodeJs', url: 'https://t.me/+SzqQb4-KJmBkMDgx'}
+]
+
+const full_stack = [
+  {name: 'BootCamp Cataline.io', url: 'https://t.me/c/1691603480/308'},
+  {name: 'Formação Full Stack Javascript do Zero ao Mercado', url: 'https://t.me/c/1691603480/255'},
+  {name: 'Programador Full Stack JavaScript PRO', url: 'https://t.me/c/1691603480/232'},
+  {name: 'Curso Full Stack - Programador BR', url: 'https://t.me/c/1691603480/91'}
+]
+
 const design = [
   {name: 'Ui Design Para Iniciantes - Origamid', url: 'https://t.me/+e11gizjfnKNjNGYx'},
   {name: 'Ui Design Avançado - Origamid', url: 'https://t.me/+K8CHjH3g2SRjZDkx'},
@@ -26,13 +46,6 @@ const design = [
   {name: 'Ux Design Heurísticas - Origamid', url: 'https://t.me/+CLNrd7hblrhjODU5'},
   {name: 'Curso Adobe XD - Origamid', url: 'https://t.me/+p2T_2xSu0VU2MzRh'},
   
-]
-
-const back = [
-  {name: 'PHP MySQL Estudonauta 2019', url: 'https://t.me/+ACVyCTN7NdxlMWNh'},
-  {name: 'PHP para Iniciantes - Gustavo Guanabara (Estudonauta) 2018', url: 'https://t.me/+TSC2xPZoe9BhZTJh'},
-  {name: 'Laravel Developer - UpInside', url: 'https://t.me/+_iQpaGXGwJU1YTIx'},
-  {name: 'Rocketseat - Ignite - Trilha NodeJs', url: 'https://t.me/+SzqQb4-KJmBkMDgx'}
 ]
 
 const dados = [
@@ -46,11 +59,13 @@ const games = [
 ]
 
 const hacking = [
-  {name: 'Solyd Pentest Profissional', url: 'https://t.me/+9dzJClJTW2hlZjZh'},
+  {name: 'Solyd Pentest Profissional', url: 'https://t.me/c/1691603480/161'},
+  {name: 'Pendrive Hacker - Técnicas de Invasão', url: 'https://t.me/c/1691603480/147'},
 ]
 
 const mobile = [
   {name: 'React Native Desenvolva APPs Android iOS - COD3R', url: 'https://t.me/+NyMXp7EPIVE1ZTEx'},
+  
 ]
 
-module.exports = {front, design, back, dados, games, hacking, categorias, web, mobile}
+module.exports = {full_stack, front, design, back, dados, games, hacking, categorias, web, mobile, initial_option}

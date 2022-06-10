@@ -1,5 +1,5 @@
 const { Telegraf, Markup } = require('telegraf')
-const {front, back, design, dados, categorias, web, games, hacking, mobile} = require('./listas')
+const {front, back, design, dados, categorias, web, games, hacking, mobile, full_stack} = require('./listas')
 
 const token = process.env.BOT_TOKEN
 if (token === undefined) {
@@ -8,7 +8,17 @@ if (token === undefined) {
 
 const bot = new Telegraf(token)
 
-bot.command('start', (ctx) => {
+bot.command('start', (ctx, next) => {
+  return ctx.reply('<b>Boas Vindas!</b>', {
+    parse_mode: 'HTML',
+    ...Markup.inlineKeyboard([
+      Markup.button.url('🤑 Fazer doação', 'https://t.me/+JK7wnzLtPA1jZTVh'),
+      Markup.button.callback('▶️ Continuar', 'continuar')
+    ])
+  })
+})
+
+bot.action('continuar', (ctx) => {
   return ctx.reply('<b>Escolha uma categoria:\n</b>', {
     parse_mode: 'HTML',
     ...Markup.inlineKeyboard(categorias.map(item => Markup.button.callback(item, item)), {columns: 2})
@@ -35,6 +45,11 @@ bot.action('Front', (ctx) => {
 bot.action('Back', (ctx, next) => {
   return ctx.reply('<b>Cursos Back End:</b>', {parse_mode: 'HTML', 
   ...Markup.inlineKeyboard(back.map(item => Markup.button.url(item.name, item.url)), {columns: 1})})
+})
+
+bot.action('FullStack', (ctx, next) => {
+  return ctx.reply('<b>Cursos Full Stack:</b>', {parse_mode: 'HTML', 
+  ...Markup.inlineKeyboard(full_stack.map(item => Markup.button.url(item.name, item.url)), {columns: 1})})
 })
 
 bot.action('Data science & afins', (ctx, next) => {
