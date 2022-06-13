@@ -1,5 +1,5 @@
 const { Telegraf, Markup } = require('telegraf')
-const {front, back, design, dados, categorias, web, games, hacking, mobile, full_stack} = require('./listas')
+const {teste, front, back, design, dados, categorias, web, games, hacking, mobile, full_stack, lista} = require('./listas')
 
 const token = process.env.BOT_TOKEN
 if (token === undefined) {
@@ -13,10 +13,25 @@ bot.command('start', (ctx, next) => {
     parse_mode: 'HTML',
     ...Markup.inlineKeyboard([
       Markup.button.url('🤑 Fazer doação', 'https://t.me/+JK7wnzLtPA1jZTVh'),
-      Markup.button.callback('▶️ Continuar', 'continuar')
+      Markup.button.callback('▶️ Continuar', 'continuar2')
     ])
   })
 })
+//-1001505347688
+//-1001691603480
+
+  bot.action('continuar2', (ctx, next) => {
+    lista.then(lst => {
+      console.log(lst)
+      return ctx.reply('<b>Escolha uma categoria:\n</b>', {
+      parse_mode: 'HTML',
+      ...Markup.inlineKeyboard(lst.map(item => Markup.button.callback(item.nome, 'encaminha')), {columns: 2})
+    })})
+  })
+
+  bot.action('encaminha', (ctx) => {
+    lista.then(lst =>  ctx.telegram.forwardMessage(ctx.chat.id, -1001691603480, lst[0].mid))
+    })
 
 bot.action('continuar', (ctx) => {
   return ctx.reply('<b>Escolha uma categoria:\n</b>', {

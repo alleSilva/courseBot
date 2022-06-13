@@ -1,3 +1,8 @@
+const db = require('./db')
+
+const lista = db.selectCourses()
+
+
 const initial_option = [
   {name: 'Fazer uma doação', url: 'https://t.me/+JK7wnzLtPA1jZTVh'},
   {name: 'Continuar', url: 'continuar'}
@@ -68,4 +73,4 @@ const mobile = [
   
 ]
 
-module.exports = {full_stack, front, design, back, dados, games, hacking, categorias, web, mobile, initial_option}
+module.exports = {lista, full_stack, front, design, back, dados, games, hacking, categorias, web, mobile, initial_option}
