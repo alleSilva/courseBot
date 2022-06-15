@@ -25,7 +25,7 @@ const selectSubCategoria = async (cat) => {
   return rows
 }
 
-const selectCursos = async (cat) => async (sub) => {
+const selectCursos = async (cat, sub) => {
   const conn = await connect()
   const [rows] = await conn.query(`SELECT * FROM cursos WHERE categoria = ${cat} AND sub = ${sub}`)
   return rows

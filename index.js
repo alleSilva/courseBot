@@ -1,7 +1,7 @@
 const { Telegraf, Markup } = require('telegraf')
 const {session} = require('telegraf')
 const db = require('./db') //selectCategorias, selectSubCategoria, selectCursos
-const {catObj, front, back, design, dados, categorias, web, games, hacking, mobile, full_stack, subcategoria,cursos, categorias_subs} = require('./listas')
+const {catObj, categorias, subcategoria,cursos, categorias_subs} = require('./listas')
 
 const token = process.env.BOT_TOKEN
 if (token === undefined) {
@@ -16,6 +16,7 @@ bot.command('start', async (ctx, next) => {
   ctx.session = {
     categorias: [],
     sub: [],
+    cursos: [],
     current_cat: 0,
     current_sub: 0
   }
@@ -59,29 +60,40 @@ bot.action('continuar', async (ctx) => {
    }
 )
 //Markup.button.callback(item.categoria, `sub ${r.id}`)
-bot.action(/cat (.+)/, (ctx) => {
+bot.action(/cat (.+)/, async (ctx) => {
   const option = ctx.match[1]
   ctx.session.current_cat = option
-  ctx.session.sub.map(r => r.then(x => {if (x.id == option) {
+  return await ctx.session.sub.map(r => r.then(x => {if (x.id == option) {
     ctx.reply(`<b>Cursos ${x.categoria}:</b>`, {parse_mode: 'HTML', 
   ...Markup.inlineKeyboard(x.subs.map(item => Markup.button.callback(item.subcategoria, `sub ${item.id}`)), {columns: 2})})
   }}))
 })
 
-bot.action(/sub (.+)/, (ctx) => {
+bot.action(/sub (.+)/, async (ctx) => {
   const option = ctx.match[1]
   ctx.session.current_sub = option
-  console.log(ctx.session)
+  const cursos = await db.selectCursos(ctx.session.current_cat, ctx.session.current_sub)
+  //await cursos.then(res => ctx.session.cursos = res)
+  ctx.session.cursos = cursos
+  console.log(ctx.session.cursos)
+    
   ctx.session.sub.map(r => r.then(x => {if (x.id == option) {
     ctx.reply(`<b>Cursos ${x.categoria}:</b>`, {parse_mode: 'HTML', 
-  ...Markup.inlineKeyboard(x.subs.map(item => Markup.button.callback(item.subcategoria, `sub ${item.id}`)), {columns: 2})})
+  ...Markup.inlineKeyboard(x.subs.map(item => Markup.button.callback(item.subcategoria, `cursos ${item.categoria} ${item.id}`)), {columns: 2})})
   }}))
 })
 
-//ctx.reply('<b>Escolha uma subcategoria:\n</b>', {
-//  parse_mode: 'HTML',
-//  ...Markup.inlineKeyboard(ctx.session.sub.map(item => item.then(r => Markup.button.callback(r.categoria, `sub ${r.id}`))), {columns: 2})
-//})
+bot.action(/cursos (.+)/, (ctx) => {
+  const option = ctx.match[1]
+  console.log(ctx.match)
+  console.log('>>>', ctx.session)
+    
+  ctx.session.cursos.map(x => {
+    ctx.reply(`<b>Cursos ${x.nome}:</b>`, {parse_mode: 'HTML', 
+  ...Markup.inlineKeyboard(x.cursos.map(item => Markup.button.callback(item.nome, `curso ${item.mid}`)), {columns: 2})})
+  
+})
+})
 
 bot.launch()
 
