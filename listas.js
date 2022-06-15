@@ -1,21 +1,37 @@
-const db = require('./db')
-
-const lista = db.selectCourses()
-
+const db = require('./db') //selectCategorias, selectSubCategoria, selectCursos
 
 const initial_option = [
   {name: 'Fazer uma doação', url: 'https://t.me/+JK7wnzLtPA1jZTVh'},
   {name: 'Continuar', url: 'continuar'}
 ]
 
-const categorias = [
+/* const categorias = [
   'Data science & afins',
   'Desenvolvimento Web',
   'Games',
   'Hacking',
   'Mobile',
   'Ui/Ux Design'
-]
+] */
+const catObj = (id, categoria, subs) => ({
+  id: id,
+  categoria: categoria,
+  subs: subs
+})
+
+const categorias = db.selectCategorias()
+
+let categorias_subs = []
+
+const categ = db.selectCategorias()
+categ.then(res =>  {
+  categorias_subs = res.map(async item => {
+    const sub = db.selectSubCategoria(item.id)
+    return await sub.then(r => catObj(item.id, item.categoria, r))
+  })
+})
+
+
 
 const web = [
   {name: 'Front End', url: 'Front'},
@@ -73,4 +89,4 @@ const mobile = [
   
 ]
 
-module.exports = {lista, full_stack, front, design, back, dados, games, hacking, categorias, web, mobile, initial_option}
+module.exports = {catObj, categorias_subs, full_stack, front, design, back, dados, games, hacking, categorias, web, mobile, initial_option, categorias}

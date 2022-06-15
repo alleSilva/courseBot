@@ -13,13 +13,25 @@ async function connect() {
 
 connect()
 
-async function selectCourses() {
+const selectCategorias = async () => {
   const conn = await connect()
-  const [rows] = await conn.query('SELECT * FROM cursos;')
+  const [rows] = await conn.query('SELECT * FROM categorias;')
   return rows
 }
 
-module.exports = {selectCourses}
+const selectSubCategoria = async (cat) => {
+  const conn = await connect()
+  const [rows] = await conn.query(`SELECT * FROM sub WHERE categoria = ${cat}`)
+  return rows
+}
+
+const selectCursos = async (cat) => async (sub) => {
+  const conn = await connect()
+  const [rows] = await conn.query(`SELECT * FROM cursos WHERE categoria = ${cat} AND sub = ${sub}`)
+  return rows
+}
+
+module.exports = {selectCategorias, selectSubCategoria, selectCursos}
 
 
 
