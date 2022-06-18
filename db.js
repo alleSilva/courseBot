@@ -2,10 +2,10 @@ const mysql = require('mysql2/promise')
 
 async function connect() {
   const connection = await mysql.createConnection({
-    host: '192.241.133.158',
+    host: process.env.HOST,
     user: 'bot',
-    password: '123456',
-    database: 'devworldcursos'
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE
   });
   global.connection = connection
   return connection
