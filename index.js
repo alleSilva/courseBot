@@ -1,9 +1,10 @@
 const { Telegraf, Markup } = require('telegraf')
 const {session} = require('telegraf')
+const env = require('./.env')
 const cache = require('./cache')
 
-const token = process.env.BOT_TOKEN
-const channel = process.env.CHANNEL_ID
+const token = env.BOT_TOKEN
+const channel = env.CHANNEL_ID
 
 if (token === undefined) {
   throw new Error('BOT_TOKEN must be provided!')
