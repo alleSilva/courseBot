@@ -18,7 +18,17 @@ const catObj = (id, categoria, subs) => ({
   subs: subs
 })
 
-bot.command('start', async (ctx, next) => {
+bot.command('start', (ctx, next) =>{
+  ctx.reply('Carregando... Selecione /categorias', Markup
+    .keyboard(['/categorias'])
+    .oneTime()
+    .resize()
+  )
+
+  return next()}
+)
+
+bot.command('categorias', async (ctx,) => {
   ctx.session = {
     categorias: [],
     sub: [],
@@ -27,25 +37,25 @@ bot.command('start', async (ctx, next) => {
     current_sub: 0,
   }
 
-  const categorias = await cache.getCategorias()
-  ctx.session.categorias = categorias
+  ctx.session.categorias = await cache.getCategorias()
 
-  return await ctx.reply('<b>Boas Vindas!</b>', {
+  return ctx.reply('<b>Boas Vindas!</b>', {
     parse_mode: 'HTML',
     ...Markup.inlineKeyboard([
       Markup.button.url('🤑 Fazer doação', 'https://t.me/+JK7wnzLtPA1jZTVh'),
-      Markup.button.callback('▶️ Continuar', 'categorias')
+      Markup.button.callback('▶️ Categorias', 'categorias')
     ])
   })
 })
 
 bot.action('categorias', async (ctx) => {
+  if(ctx.session) cache.getCategorias().then(r => ctx.session.categorias = r)
   ctx.session.sub = ctx.session.categorias.map(async item => {
-    const sub = await cache.getSubCategoria(item.id)
+    let sub = await cache.getSubCategoria(item.id)
     return catObj(item.id, item.categoria, sub)
   })
 
-  return await ctx.reply('<b>Escolha uma categoria:\n</b>', {
+  return ctx.reply('<b>Escolha uma categoria:\n</b>', {
     parse_mode: 'HTML',
     ...Markup.inlineKeyboard(ctx.session.categorias.map(
       item => Markup.button.callback(item.categoria, `sub ${item.id}`)), {columns: 2})
@@ -54,13 +64,13 @@ bot.action('categorias', async (ctx) => {
 )
 
 bot.action(/sub (.+)/, async (ctx) => {
-  const option = ctx.match[1]
-  ctx.session.current_cat = option
-  return await ctx.session.sub.map(r => r.then(x => {if (x.id == option) {
-    ctx.reply(`<b>Cursos ${x.categoria}:</b>`, {
-      parse_mode: 'HTML', 
-  ...Markup.inlineKeyboard(x.subs.map(
-    item => Markup.button.callback(item.subcategoria, `cursos ${item.subcategoria} ${item.id}`)), {columns: 2})})
+  if(ctx.session) ctx.session.current_cat = ctx.match[1];
+  return ctx.session.sub.map(r => r.then(async x => {
+    if (x.id == ctx.match[1]) {
+      ctx.reply(`<b>${x.categoria}:</b>`, {
+        parse_mode: 'HTML', 
+    ...Markup.inlineKeyboard(x.subs.map(
+      item => Markup.button.callback(item.subcategoria, `cursos ${item.subcategoria} ${item.id}`)), {columns: 2})})
   }}))
 })
 
@@ -78,16 +88,14 @@ bot.action(/cursos (.+)/, async (ctx) => {
       sub_info = sub_info + " " + infos[i]
     }
   }
-
-  ctx.session.current_sub = option
-  const cursos = await cache.getCursos(ctx.session.current_cat, ctx.session.current_sub)
   
-  ctx.session.cursos = cursos
- 
+  ctx.session.current_sub = option
+  ctx.session.cursos = await cache.getCursos(ctx.session.current_cat, ctx.session.current_sub)
+  
   ctx.reply(`<b>Cursos ${sub_info}:</b>`, {
     parse_mode: 'HTML', 
   ...Markup.inlineKeyboard(
-    cursos.map(item => Markup.button.callback(item.nome, `encaminha ${item.mid}`)), {columns: 2})}
+    ctx.session.cursos.map(item => Markup.button.callback(item.nome, `encaminha ${item.mid}`)), {columns: 2})}
     )
 })
 
